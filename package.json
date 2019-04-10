@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-demo",
+  "version": "1.0.0",
+  "description": "My splendid Nuxt.js project",
+  "author": "berlin",
+  "private": true,
+  "scripts": {
+    "staging": "cross-env MODE=staging nuxt",
+    "dev": "cross-env MODE=dev nuxt",
+    "build": "cross-env MODE=prod nuxt build",
+    "build:docker": "nuxt build",
+    "start": "cross-env HOST=0.0.0.0 PORT=3333 MODE=prod nuxt start",
+    "start:docker": "nuxt start",
+    "generate": "cross-env MODE=prod nuxt generate",
+    "precommit": "pretty-quick --staged"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.4.1",
+    "cross-env": "^5.2.0",
+    "dotenv": "^7.0.0",
+    "element-ui": "^2.6.1",
+    "js-cookie": "^2.2.0",
+    "nuxt": "^2.4.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "el-data-table": "0.12.0",
+    "el-form-renderer": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "babel-plugin-component": "^1.1.0",
+    "eslint": "^4.15.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-vue": "^4.0.0",
+    "husky": "^0.14.3",
+    "jsdom": "^11.10.0",
+    "nodemon": "^1.18.9",
+    "prettier": "1.12.1",
+    "pretty-quick": "^1.4.1"
+  }
+}
