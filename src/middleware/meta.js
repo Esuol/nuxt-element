@@ -4,14 +4,14 @@
 export default async function({store, app}) {
   // if (process.server) return
 
-  if (!store.state.meta.appName) {
+  if (!store.state.users.meta.appName) {
     try {
       await store.dispatch('fetchMetaInfo')
     } catch (e) {
       console.log('meta error: ', e)
     }
 
-    let meta = store.state.meta
+    let meta = store.state.users.meta
 
     let head = app.head
 

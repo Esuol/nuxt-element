@@ -37,11 +37,18 @@ export default {
     }
   },
   async asyncData(context) {
-    const data = await this.$axios.$post(
-      'http://47.99.180.157:3000/mock/97/a',
-      {type: 1}
-    )
-    console.log(data)
+    //console.log(context)
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    async getData() {
+      const data = await this.$axios.$get(
+        'https://jsonplaceholder.typicode.com/todos/1'
+      )
+      // console.log(data)
+    }
   }
 }
 </script>

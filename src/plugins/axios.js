@@ -7,8 +7,8 @@ export default function(context) {
   $axios.onRequest(config => {
     let url = config.url
 
-    url += url.indexOf('?') > -1 ? '&' : '?'
-    url += `token=${store.state.token}`
+    // url += url.indexOf('?') > -1 ? '&' : '?'
+    // url += `token=${store.state.token}`
 
     config.url = url
 

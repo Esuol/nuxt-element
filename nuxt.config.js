@@ -114,10 +114,13 @@ module.exports = {
     },
     {
       src: '~/plugins/element'
+    },
+    {
+      src: '~/plugins/particles',
+      ssr: false
     }
   ],
 
   modules: ['@nuxtjs/axios'],
-
   axios
 }
