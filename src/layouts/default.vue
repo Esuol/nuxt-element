@@ -1,25 +1,12 @@
 <template>
   <el-container style="background: #f0f2f5;">
-    <el-menu :collapse="collapse" class="aside-menu"
-             :default-active="$route.path" router
-             :background-color="bgColor"
-             :text-color="textColor"
-    >
-      <div class="logo">
-        <nuxt-link to="/">
-          <!--<img class="logo-img" :src="$store.state.meta.logo" alt="logo">-->
-          <h1 class="logo-text">{{$store.state.users.meta.appName}}</h1>
-        </nuxt-link>
-      </div>
-      <!-- handleItem 为自定义事件，监听外链点击事件 -->
-      <!-- link-style 为外链样式-->
-      <menu-item @handleItem="handleItem" :link-style="{color: textColor, backgroundColor: bgColor}" :collapse="collapse"></menu-item>
-    </el-menu>
 
-    <el-container>
+    <Menu :collapse="collapse"  v-if="isShowBigMenu" />
+
+    <el-container  ref="mainpager">
       <el-header>
         <el-row type="flex" justify="space-between" align="middle">
-          <el-col>
+          <el-col v-if="$store.state.menu.showBigMenu">
             <el-button @click="collapse = !collapse"><i class="el-icon-sort"></i></el-button>
           </el-col>
           <el-col style="text-align: right">
@@ -45,44 +32,126 @@
       </el-footer>
 
     </el-container>
+
+    <div>
+      <a-drawer
+        title=""
+        placement="left"
+        :closable="false"
+        :visible="$store.state.menu.showsmallMenu"
+        @close="onClose">
+        <div class="SiderMenus">
+          <Menu :collapse="collapse" />
+        </div>
+
+        <a-icon
+          v-if="$store.state.menu.showsmallMenu"
+          class="icons-copy"
+          :type="$store.state.menu.showsmallMenu ? 'close':'bars'"
+          @click="hideSmall" />
+      </a-drawer>
+    </div>
+
+    <div
+      v-if="!$store.state.menu.showBigMenu">
+      <a-icon
+        class="icons"
+        type="bars"
+        @click="showSmall" />
+    </div>
+
+
   </el-container>
 </template>
 
 <script>
-import MenuItem from '@/components/MenuItem.vue'
+import Menu from '@/components/Menu.vue'
 import CopyRight from '@/components/CopyRight.vue'
 import {mapState} from 'vuex'
+const move = require('move-js')
 
 export default {
   components: {
-    MenuItem,
-    CopyRight
+    CopyRight,
+    Menu
   },
   data() {
     return {
       collapse: false,
       textColor: '#fff',
-      bgColor: '#001529'
+      bgColor: '#001529',
+      currentClientWidth: 0,
+      isShowBigMenu: true
     }
+  },
+  watch: {
+    currentClientWidth(newVal, oldVal) {
+      this.modifyMenu()
+    },
+    '$store.state.menu.showsmallMenu'(newVal, old) {
+      if (!newVal) {
+        move(this.$refs['mainpager'].$el)
+          .to(0, 0)
+          .end()
+      }
+    }
+  },
+  mounted() {
+    this.initProject()
   },
   methods: {
     handleDropdown(action) {
       this.$store.commit(action)
       this.$router.replace('/login')
     },
+    initProject() {
+      console.log(document.body.clientWidth)
+      if (document.body.clientWidth === 0) {
+        setTimeout(() => {
+          //console.log(document.body.clientWidth)
+          this.currentClientWidth = document.body.clientWidth
+          this.watchWidth()
+        }, 1000)
+      } else {
+        this.currentClientWidth = document.body.clientWidth
+        this.watchWidth()
+      }
+    },
+    modifyMenu() {
+      if (this.currentClientWidth < 768) {
+        this.isShowBigMenu = false
+        this.$store.commit('menu/update', false)
+      } else {
+        this.$store.commit('menu/updateSmall', false)
+        this.$store.commit('menu/update', true)
+      }
+    },
+    watchWidth() {
+      let timer = null
+      window.onresize = () => {
+        if (timer) clearTimeout(this.timmer)
 
-    handleItem(url) {
-      let {token, userId, user} = this.$store.state
-      let prefix = url.slice(-1) === '?' ? '&' : '?'
-      let query = `${prefix}token=${token}&projectNo=${
-        user.projectNo
-      }&userId=${userId}`
-
-      window.open(`${url}${query}`, '_blank')
+        timer = setTimeout(() => {
+          this.currentClientWidth = document.body.clientWidth
+        }, 1000)
+      }
+      this.modifyMenu()
+    },
+    onClose() {
+      this.$store.commit('menu/updateSmall', false)
+    },
+    showSmall() {
+      this.$store.commit('menu/updateSmall', true)
+      move(this.$refs['mainpager'].$el)
+        .to(256, 0)
+        .end()
+    },
+    hideSmall() {
+      this.$store.commit('menu/updateSmall', false)
+      move(this.$refs['mainpager'].$el)
+        .to(0, 0)
+        .end()
     }
-  },
-  computed: {
-    ...mapState(['menuList'])
   }
 }
 </script>
@@ -251,5 +320,15 @@ menuHeight = 40px
   font-size: 12px;
 }
 
+}
+.icons{
+  position: fixed;
+  top: 14px;
+  left: 0px;
+  width: 40px;
+  height: 40px;
+  padding-top: 12px;
+  box-shadow: 0px 0px 10px 0 #999;
+  z-index: 100;
 }
 </style>

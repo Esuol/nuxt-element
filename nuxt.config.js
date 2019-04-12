@@ -90,6 +90,14 @@ module.exports = {
             libraryName: 'element-ui',
             styleLibraryName: 'theme-chalk'
           }
+        ],
+        [
+          'import',
+          {
+            libraryName: 'ant-design-vue',
+            libraryDirectory: 'es',
+            style: 'css'
+          }
         ]
       ]
     },
@@ -114,6 +122,14 @@ module.exports = {
     },
     {
       src: '~/plugins/element'
+    },
+    {
+      src: '~/plugins/antd',
+      ssr: false
+    },
+    {
+      src: '~/plugins/docs',
+      ssr: false
     },
     {
       src: '~/plugins/particles',
