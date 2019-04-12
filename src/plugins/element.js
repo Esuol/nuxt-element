@@ -34,6 +34,7 @@ import {
   Menu,
   Submenu,
   MenuItem,
+  MenuItemGroup,
   Dropdown,
   Card,
   DropdownMenu,
@@ -63,6 +64,7 @@ Vue.use(ButtonGroup)
 Vue.use(Submenu)
 Vue.use(Card)
 Vue.use(MenuItem)
+Vue.use(MenuItemGroup)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)

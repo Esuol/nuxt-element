@@ -1,55 +1,255 @@
 <template>
-  <div>
-    <nuxt />
-  </div>
+  <el-container style="background: #f0f2f5;">
+    <el-menu :collapse="collapse" class="aside-menu"
+             :default-active="$route.path" router
+             :background-color="bgColor"
+             :text-color="textColor"
+    >
+      <div class="logo">
+        <nuxt-link to="/">
+          <!--<img class="logo-img" :src="$store.state.meta.logo" alt="logo">-->
+          <h1 class="logo-text">{{$store.state.users.meta.appName}}</h1>
+        </nuxt-link>
+      </div>
+      <!-- handleItem 为自定义事件，监听外链点击事件 -->
+      <!-- link-style 为外链样式-->
+      <menu-item @handleItem="handleItem" :link-style="{color: textColor, backgroundColor: bgColor}" :collapse="collapse"></menu-item>
+    </el-menu>
+
+    <el-container>
+      <el-header>
+        <el-row type="flex" justify="space-between" align="middle">
+          <el-col>
+            <el-button @click="collapse = !collapse"><i class="el-icon-sort"></i></el-button>
+          </el-col>
+          <el-col style="text-align: right">
+            <el-dropdown @command="handleDropdown">
+            <span class="el-dropdown-link">
+              {{$store.state.users.fullname}}
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+              <el-dropdown-menu slot="dropdown" >
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-col>
+        </el-row>
+      </el-header>
+
+      <el-main class="nuxt-main">
+        <nuxt></nuxt>
+      </el-main>
+
+      <el-footer >
+        <CopyRight />
+      </el-footer>
+
+    </el-container>
+  </el-container>
 </template>
 
-<style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
+<script>
+import MenuItem from '@/components/MenuItem.vue'
+import CopyRight from '@/components/CopyRight.vue'
+import {mapState} from 'vuex'
+
+export default {
+  components: {
+    MenuItem,
+    CopyRight
+  },
+  data() {
+    return {
+      collapse: false,
+      textColor: '#fff',
+      bgColor: '#001529'
+    }
+  },
+  methods: {
+    handleDropdown(action) {
+      this.$store.commit(action)
+      this.$router.replace('/login')
+    },
+
+    handleItem(url) {
+      let {token, userId, user} = this.$store.state
+      let prefix = url.slice(-1) === '?' ? '&' : '?'
+      let query = `${prefix}token=${token}&projectNo=${
+        user.projectNo
+      }&userId=${userId}`
+
+      window.open(`${url}${query}`, '_blank')
+    }
+  },
+  computed: {
+    ...mapState(['menuList'])
+  }
+}
+</script>
+
+<style lang="stylus">
+#__nuxt {
+
+.el-icon-sort {
+  transform: rotate(-90deg)
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
+
+.logo {
+  position: relative;
+  height: 60px;
+  line-height: 60px;
+  padding-left: 18px;
+  background: #002140;
+  overflow: hidden;
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+  }
+
+  .logo-text {
+    color: #fff;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 20px;
+    margin: 0 0 0 12px;
+    font-weight: 400;
+    opacity: 1;
+  }
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+// 折叠
+.aside-menu.el-menu--collapse {
+  /*width: 80px;*/
+  min-width: 64px;
+
+  .logo-text {
+    opacity: 0;
+  }
+
+  // 没有子菜单
+   .el-tooltip {
+     margin-left: 4px;
+
+    [class*='icon'] {
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+
+  // 有子菜单
+  .el-submenu__title {
+     margin-left: 4px;
+
+    .sub-menu-title,
+    .el-submenu__icon-arrow {
+      display: none;
+    }
+
+    [class*='icon'] {
+      font-size: 16px;
+      margin: 0;
+    }
+  }
 }
 
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
+// 子菜单
+.el-menu--vertical {
+  .el-menu-item,
+  .el-submenu__title {
+    height: menuHeight;
+    line-height: menuHeight;
+  }
+
+  .iconfont {
+    display: none;
+  }
 }
 
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
+
+// 未折叠
+.aside-menu:not(.el-menu--collapse) {
+  min-width: 256px;
+  max-width: @min-width;
+
+  [class*='icon'] {
+    font-size: 14px;
+    margin-right: 5px;
+  }
 }
 
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+
+menuBg = #001529
+submenuBg = #000c17
+mainColor = #1890ff
+// antd menu 高度
+menuHeight = 40px
+
+.aside-menu {
+  min-height: 100vh;
+  border-right: none;
+  font-weight: 300;
+  background: menuBg;
+  /*transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);*/
+  /*transition-duration: .3s;*/
+  box-shadow: 2px 0 6px rgba(0,21,41,.35);
+
+    .el-submenu__title {
+      height: menuHeight;
+      line-height: menuHeight;
+    }
+
+   .el-submenu {
+     margin: 8px 0;
+
+     &.is-active {
+       margin-bottom: 8px;
+     }
+   }
+
+  .el-menu-item {
+    height: menuHeight;
+    line-height: menuHeight;
+    margin: 8px 0;
+
+    &:hover {
+      color: #fff !important;
+      /*background: menuBg;*/
+    }
+
+    &.is-active {
+       color: #fff;
+       background: mainColor !important;
+     }
+  }
+}
+
+
+// header
+.el-header {
+  padding: 10px 20px;
+  /*height: 60px !important;*/
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: #fff;
+}
+
+// main
+.nuxt-main {
+  margin: 24px 24px 0;
+  padding: 24px;
+  background: #fff;
+}
+
+// dropdown
+.el-dropdown-link {
+ cursor: pointer;
+ color: #409EFF;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+
 }
 </style>
