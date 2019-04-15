@@ -1,7 +1,7 @@
 <template>
   <el-container style="background: #f0f2f5;">
 
-    <Menu :collapse="collapse"  v-if="isShowBigMenu" />
+    <Menu :collapse="collapse"  v-if="isShowBigMenu" backgroundColor="#001529" textColor="#fff" />
 
     <el-container  ref="mainpager">
       <el-header>
@@ -41,7 +41,7 @@
         :visible="$store.state.menu.showsmallMenu"
         @close="onClose">
         <div class="SiderMenus">
-          <Menu :collapse="collapse" />
+          <Menu :collapse="collapse" backgroundColor="#fff" textColor="#333" />
         </div>
 
         <a-icon
@@ -52,9 +52,9 @@
       </a-drawer>
     </div>
 
-    <div
-      v-if="!$store.state.menu.showBigMenu">
+    <div>
       <a-icon
+       v-if="(!$store.state.menu.showBigMenu)"
         class="icons"
         type="bars"
         @click="showSmall" />
@@ -68,7 +68,6 @@
 import Menu from '@/components/Menu.vue'
 import CopyRight from '@/components/CopyRight.vue'
 import {mapState} from 'vuex'
-const move = require('move-js')
 
 export default {
   components: {
@@ -90,7 +89,7 @@ export default {
     },
     '$store.state.menu.showsmallMenu'(newVal, old) {
       if (!newVal) {
-        move(this.$refs['mainpager'].$el)
+        this.$move(this.$refs['mainpager'].$el)
           .to(0, 0)
           .end()
       }
@@ -122,6 +121,7 @@ export default {
         this.isShowBigMenu = false
         this.$store.commit('menu/update', false)
       } else {
+        this.isShowBigMenu = true
         this.$store.commit('menu/updateSmall', false)
         this.$store.commit('menu/update', true)
       }
@@ -142,13 +142,13 @@ export default {
     },
     showSmall() {
       this.$store.commit('menu/updateSmall', true)
-      move(this.$refs['mainpager'].$el)
+      this.$move(this.$refs['mainpager'].$el)
         .to(256, 0)
         .end()
     },
     hideSmall() {
       this.$store.commit('menu/updateSmall', false)
-      move(this.$refs['mainpager'].$el)
+      this.$move(this.$refs['mainpager'].$el)
         .to(0, 0)
         .end()
     }
@@ -156,7 +156,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 #__nuxt {
 
 .el-icon-sort {
@@ -331,4 +331,18 @@ menuHeight = 40px
   box-shadow: 0px 0px 10px 0 #999;
   z-index: 100;
 }
+.drawer {
+  position: relative
+}
+.icons-copy{
+  width: 40px;
+  height: 40px;
+  padding-top: 12px;
+  z-index: 100;
+  background: #fff;
+  position: absolute;
+  right: -40px;
+  top:14px
+}
+
 </style>

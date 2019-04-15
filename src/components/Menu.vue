@@ -1,8 +1,9 @@
 <template>
-  <el-menu :collapse="collapse" class="aside-menu"
+  <el-menu :collapse="trueCollapse" class="aside-menu"
              :default-active="$route.path" router
-             :background-color="bgColor"
+             :background-color="backgroundColor"
              :text-color="textColor"
+             active-text-color="#409eff"
     >
       <div class="logo">
         <nuxt-link to="/">
@@ -25,13 +26,27 @@ export default {
   },
   data() {
     return {
-      textColor: '#fff',
       bgColor: '#001529'
     }
   },
   props: {
     collapse: {
       type: Boolean
+    },
+
+    backgroundColor: {
+      default: '',
+      type: String
+    },
+
+    textColor: {
+      default: '',
+      type: String
+    }
+  },
+  computed: {
+    trueCollapse() {
+      return this.$store.state.menu.showBigMenu ? !this.collapse : this.collapse
     }
   },
   methods: {

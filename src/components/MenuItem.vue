@@ -3,7 +3,7 @@
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span slot="title" :style="{marginLeft: !collapse ? '0' : '14px',color: !collapse ? '#fff' : 'transparent'}">导航一</span>
+          <span slot="title" :style="{marginLeft: !collapse ? '0' : '14px',color: textColor }">导航一</span>
         </template>
         <el-menu-item-group>
           <span slot="title">分组一</span>
@@ -44,6 +44,17 @@ export default {
   props: {
     collapse: {
       type: Boolean
+    }
+  },
+  computed: {
+    textColor() {
+      let color
+      if (!this.$store.state.menu.showBigMenu) color = '#333'
+      else {
+        if (this.collapse) color = '#fff'
+        else color = 'transparent'
+      }
+      return color
     }
   },
   methods: {

@@ -128,6 +128,10 @@ module.exports = {
       ssr: false
     },
     {
+      src: '~/plugins/move',
+      ssr: false
+    },
+    {
       src: '~/plugins/docs',
       ssr: false
     },
