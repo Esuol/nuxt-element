@@ -25,9 +25,9 @@
     "element-ui": "^2.6.1",
     "js-cookie": "^2.2.0",
     "less": "^3.9.0",
-    "less-loader": "^4.1.0",
+    "less-loader": "^11.1.0",
     "move-js": "^0.5.0",
-    "nuxt": "^2.4.0",
+    "nuxt": "^3.0.0",
     "vue2-dragula": "^2.5.4"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "babel-plugin-import": "^1.11.0",
     "eslint": "^4.15.0",
     "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
+    "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^4.0.0",
     "husky": "^0.14.3",
     "jsdom": "^11.10.0",
@@ -44,7 +44,7 @@
     "prettier": "1.12.1",
     "pretty-quick": "^1.4.1",
     "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
+    "stylus-loader": "^7.1.0",
     "vue-particles": "^1.0.9"
   }
 }
